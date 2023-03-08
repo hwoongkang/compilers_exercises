@@ -1,4 +1,4 @@
-#[derive(Eq, PartialEq, Hash, Copy, Clone)]
+#[derive(Eq, PartialEq, Hash, Copy, Clone, Debug)]
 pub struct Tag(pub u16);
 
 impl Tag {

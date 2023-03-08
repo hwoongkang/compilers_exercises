@@ -62,7 +62,7 @@ impl Lexer {
             None => None,
         }
     }
-    fn scan(&mut self) -> Box<dyn Token> {
+    pub fn scan(&mut self) -> Box<dyn Token> {
         loop {
             let ch = self.read();
 
@@ -124,5 +124,34 @@ impl Lexer {
             }
             _ => Box::new(DefaultToken::new(self.peek)),
         }
+    }
+}
+
+#[cfg(test)]
+mod lexer_tests {
+    use super::*;
+
+    #[test]
+    fn test_empty_lexer() {
+        let lexer = Lexer::new("a = 1".to_string());
+        assert_eq!(
+            lexer.words,
+            HashMap::from_iter([
+                ("true".to_string(), Word::new(Tag::TRUE, "true".to_string())),
+                (
+                    "false".to_string(),
+                    Word::new(Tag::FALSE, "false".to_string())
+                )
+            ])
+        );
+    }
+    #[test]
+    fn test_first_scan() {
+        let mut lexer = Lexer::new("a = 1".to_string());
+        let token = lexer.scan();
+        assert_eq!(
+            token.to_string(),
+            Word::new(Tag::ID, "a".to_string()).to_string()
+        );
     }
 }
