@@ -177,7 +177,7 @@ impl Lexer {
                     }
                 }
             },
-            _ => Ok(()),
+            _ => Err(LexerError::UnexpectedToken),
         }
     }
 }
@@ -258,10 +258,17 @@ mod lexer_tests {
         );
     }
     #[test]
-    fn test_multiline_comment_EOF() {
+    fn test_multiline_comment_eof() {
         let mut lexer = Lexer::new("/* this should not **** pass".to_string());
         let token = lexer.scan();
         assert!(token.is_err());
         assert_eq!(token.err(), Some(LexerError::UnexpectedEOF),);
+    }
+    #[test]
+    fn test_comment_unexpected_token() {
+        let mut lexer = Lexer::new("/ this is a wrong comment should not **** pass".to_string());
+        let token = lexer.scan();
+        assert!(token.is_err());
+        assert_eq!(token.err(), Some(LexerError::UnexpectedToken),);
     }
 }
